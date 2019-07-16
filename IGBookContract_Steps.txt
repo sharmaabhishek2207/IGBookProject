@@ -1,0 +1,72 @@
+ssh -i sambhavgmail.pem ubuntu@35.177.2.48
+
+sudo mkdir LearnSolidity
+sudo chmod 777 -R LearnSolidity
+cd LearnSolidity/
+
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+sudo apt-get install build-essential
+
+sudo chmod 777 /usr/lib/node_modules
+sudo npm i -g ethereumjs-testrpc
+npm i -g ethereumjs-util
+sudo npm install -g ganache-cli
+sudo chmod 777 -R /home/ubuntu/.config
+sudo npm i -g truffle@v5.0.5
+sudo chmod 777 -R /usr/lib/node_modules/truffle/
+
+
+sudo truffle init
+cd contracts
+sudo vi IGBookContract.sol
+
+cd ../migrations
+sudo vi 2_deploy_contracts.js
+
+# Starts up TestRPC with a specified “seed” phrase
+testrpc -m “sample dog come year spray crawl learn general detect silver jelly pilot”
+
+# Open a new terminal
+cd LearnSolidity
+sudo truffle compile
+
+sudo vi truffle-config.js // and uncomment below section
+development: {
+        host: "127.0.0.1",     // Localhost (default: none)
+        port: 8545,            // Standard Ethereum port (default: none)
+        network_id: "*",       // Any network (default: none)
+ }     
+ 
+ sudo truffle migrate  #This command doe test deployment of your contract on your TestRPC node.
+ 
+ #If contract is successfully deployed then you will get the contract address - 0x7fd39e17E50b17D2BEdb05fEce32e70E43a4FB92
+ 
+# NOTE - On TestRPC, if you shut down TestRPC it will forget everything, and once you start TestRPC back up again, you’ll have to re-deploy your contract and you’ll get a different address for your smart-contract.
+ 
+ # Execute the contract
+ truffle console
+ 
+ > IGBookContract = IGBookContract.deployed() // return contract
+ > IGBookContract.then(function(instance){return JSON.stringify(instance.abi);})  // return abi of contract
+ > IGBookContract.then(function(instance){return instance.registerNewUser("Tectract","0x44656e766172","0x434f","0x555341");}) //("Tectract","Denver","CO","USA");})
+ > IGBookContract.then(function(instance){return instance.addImageToUser('www.myimageURL.com','0x6c3e007e281f6948b37c511a11e43c8026d2a16a8a45fed4e83379b66b0ab927');})
+ > IGBookContract.then(function(instance){return instance.getUser('0x1A004a36a6BC9BCdE42c6d2b237C6477CF0f535f');}) 
+ > IGBookContract.then(function(instance){return instance.getUsers();})
+ > IGBookContract.then(function(instance){return instance.getImages();})
+ > IGBookContract.then(function(instance){return instance.getImage('0x6c3e007e281f6948b37c511a11e43c8026d2a16a8a45fed4e83379b66b0ab927');})
+ 
+ ================================================================================
+ Web App Setup
+ 
+ git clone https://github.com/sharmaabhishek2207/IGBookReactApp
+
+ cd IGBookReactApp
+
+ sudo vi src/App.js  // update the ethereum node address and contract address
+ npm i
+
+ npm start
+ 
+ Web app - http://35.177.2.48:3000/
